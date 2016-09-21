@@ -1223,6 +1223,8 @@ util_curl_xdecref(CurlObject *self, int flags, CURL *handle)
         /* Decrement refcounts for httppost related references. */
         Py_CLEAR(self->httppost_ref_list);
     }
+    /* LP: #1063350 work around. */
+    Py_DECREF(PyFloat_FromDouble((double)(1.0 / 2)));
 }
 
 
