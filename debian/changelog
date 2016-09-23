@@ -1,4 +1,4 @@
-pycurl (7.19.3-0ubuntu3+hh0) unstable; urgency=medium
+pycurl (7.19.3-0ubuntu3+hh1) unstable; urgency=medium
 
   * debianize 7.19.3 version
 
