@@ -1,0 +1,5 @@
+pycurl (7.19.3-0ubuntu3+hh0) unstable; urgency=medium
+
+  * debianize 7.19.3 version
+
+ -- Andrey Sumin <an.sumin@hh.ru>  Wed, 21 Sep 2016 15:28:33 +0300
