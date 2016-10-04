@@ -5,10 +5,7 @@
 import threading
 import pycurl
 import unittest
-try:
-    import urllib.parse as urllib_parse
-except ImportError:
-    import urllib as urllib_parse
+import nose.tools
 
 from . import appmanager
 from . import util
@@ -58,3 +55,13 @@ class ShareTest(unittest.TestCase):
         s = pycurl.CurlShare()
         s.close()
         s.close()
+    
+    # positional arguments are rejected
+    @nose.tools.raises(TypeError)
+    def test_positional_arguments(self):
+        pycurl.CurlShare(1)
+    
+    # keyword arguments are rejected
+    @nose.tools.raises(TypeError)
+    def test_keyword_arguments(self):
+        pycurl.CurlShare(a=1)

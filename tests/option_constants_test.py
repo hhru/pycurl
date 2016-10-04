@@ -4,6 +4,7 @@
 
 import pycurl
 import unittest
+import nose.plugins.attrib
 import nose.plugins.skip
 
 from . import util
@@ -55,7 +56,7 @@ class OptionConstantsTest(unittest.TestCase):
 
     # CURL_REDIR_POST_303 was introduced in libcurl-7.26.0
     @util.min_libcurl(7, 26, 0)
-    def test_postredir_flags(self):
+    def test_postredir_post_303(self):
         self.assertEqual(pycurl.REDIR_POST_303, pycurl.REDIR_POST_ALL & pycurl.REDIR_POST_303)
 
     # HTTPAUTH_DIGEST_IE was introduced in libcurl-7.19.3
@@ -73,4 +74,127 @@ class OptionConstantsTest(unittest.TestCase):
     def test_noproxy_setopt(self):
         curl = pycurl.Curl()
         curl.setopt(curl.NOPROXY, 'localhost')
+        curl.close()
+    
+    # CURLOPT_PROTOCOLS was introduced in libcurl-7.19.4
+    @util.min_libcurl(7, 19, 4)
+    def test_protocols_setopt(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.PROTOCOLS, curl.PROTO_ALL & ~curl.PROTO_HTTP)
+        curl.close()
+    
+    # CURLOPT_REDIR_PROTOCOLS was introduced in libcurl-7.19.4
+    @util.min_libcurl(7, 19, 4)
+    def test_redir_protocols_setopt(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.PROTOCOLS, curl.PROTO_ALL & ~curl.PROTO_HTTP)
+        curl.close()
+    
+    # CURLOPT_TFTP_BLKSIZE was introduced in libcurl-7.19.4
+    @util.min_libcurl(7, 19, 4)
+    def test_tftp_blksize_setopt(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.TFTP_BLKSIZE, 1024)
+        curl.close()
+    
+    # CURLOPT_SOCKS5_GSSAPI_SERVICE was introduced in libcurl-7.19.4
+    @util.min_libcurl(7, 19, 4)
+    @nose.plugins.attrib.attr('gssapi')
+    def test_socks5_gssapi_service_setopt(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.SOCKS5_GSSAPI_SERVICE, 'helloworld')
+        curl.close()
+    
+    # CURLOPT_SOCKS5_GSSAPI_NEC was introduced in libcurl-7.19.4
+    @util.min_libcurl(7, 19, 4)
+    @nose.plugins.attrib.attr('gssapi')
+    def test_socks5_gssapi_nec_setopt(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.SOCKS5_GSSAPI_NEC, True)
+        curl.close()
+    
+    # CURLPROXY_HTTP_1_0 was introduced in libcurl-7.19.4
+    @util.min_libcurl(7, 19, 4)
+    def test_curlproxy_http_1_0_setopt(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.PROXYTYPE, curl.PROXYTYPE_HTTP_1_0)
+        curl.close()
+    
+    # CURLOPT_SSH_KNOWNHOSTS was introduced in libcurl-7.19.6
+    @util.min_libcurl(7, 19, 6)
+    @util.guard_unknown_libcurl_option
+    def test_ssh_knownhosts_setopt(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.SSH_KNOWNHOSTS, '/hello/world')
+        curl.close()
+    
+    # CURLOPT_MAIL_FROM was introduced in libcurl-7.20.0
+    @util.min_libcurl(7, 20, 0)
+    def test_mail_from(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.MAIL_FROM, 'hello@world.com')
+        curl.close()
+    
+    # CURLOPT_MAIL_RCPT was introduced in libcurl-7.20.0
+    @util.min_libcurl(7, 20, 0)
+    def test_mail_rcpt(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.MAIL_RCPT, ['hello@world.com', 'foo@bar.com'])
+        curl.close()
+    
+    # CURLOPT_MAIL_AUTH was introduced in libcurl-7.25.0
+    @util.min_libcurl(7, 25, 0)
+    def test_mail_auth(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.MAIL_AUTH, 'hello@world.com')
+        curl.close()
+    
+    @util.min_libcurl(7, 22, 0)
+    @nose.plugins.attrib.attr('gssapi')
+    def test_gssapi_delegation_options(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.GSSAPI_DELEGATION, curl.GSSAPI_DELEGATION_FLAG)
+        curl.setopt(curl.GSSAPI_DELEGATION, curl.GSSAPI_DELEGATION_NONE)
+        curl.setopt(curl.GSSAPI_DELEGATION, curl.GSSAPI_DELEGATION_POLICY_FLAG)
+        curl.close()
+    
+    # SSLVERSION_DEFAULT causes CURLE_UNKNOWN_OPTION without SSL
+    @util.only_ssl
+    def test_sslversion_options(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.SSLVERSION, curl.SSLVERSION_DEFAULT)
+        curl.setopt(curl.SSLVERSION, curl.SSLVERSION_SSLv2)
+        curl.setopt(curl.SSLVERSION, curl.SSLVERSION_SSLv3)
+        curl.setopt(curl.SSLVERSION, curl.SSLVERSION_TLSv1)
+        curl.close()
+    
+    @util.min_libcurl(7, 34, 0)
+    # SSLVERSION_TLSv1_0 causes CURLE_UNKNOWN_OPTION without SSL
+    @util.only_ssl
+    def test_sslversion_7_34_0(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.SSLVERSION, curl.SSLVERSION_TLSv1_0)
+        curl.setopt(curl.SSLVERSION, curl.SSLVERSION_TLSv1_1)
+        curl.setopt(curl.SSLVERSION, curl.SSLVERSION_TLSv1_2)
+        curl.close()
+    
+    @util.min_libcurl(7, 41, 0)
+    @util.only_ssl_backends('openssl', 'nss')
+    def test_ssl_verifystatus(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.SSL_VERIFYSTATUS, True)
+        curl.close()
+    
+    @util.min_libcurl(7, 43, 0)
+    @nose.plugins.attrib.attr('gssapi')
+    def test_proxy_service_name(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.PROXY_SERVICE_NAME, 'fakehttp')
+        curl.close()
+    
+    @util.min_libcurl(7, 43, 0)
+    @nose.plugins.attrib.attr('gssapi')
+    def test_service_name(self):
+        curl = pycurl.Curl()
+        curl.setopt(curl.SERVICE_NAME, 'fakehttp')
         curl.close()

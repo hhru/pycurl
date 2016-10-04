@@ -116,6 +116,15 @@ class InternalsTest(unittest.TestCase):
         else:
             assert False, "No exception when trying to copy a CurlMulti handle"
     
+    def test_copy_share(self):
+        s = pycurl.CurlShare()
+        try:
+            copy.copy(s)
+        except (copy.Error, TypeError):
+            pass
+        else:
+            assert False, "No exception when trying to copy a CurlShare handle"
+    
     def test_pickle_curl(self):
         fp = util.StringIO()
         p = pickle.Pickler(fp, 1)
@@ -140,6 +149,45 @@ class InternalsTest(unittest.TestCase):
             assert 0, "No exception when trying to pickle a CurlMulti handle"
         del m, fp, p
     
+    def test_pickle_share(self):
+        s = pycurl.CurlShare()
+        fp = util.StringIO()
+        p = pickle.Pickler(fp, 1)
+        try:
+            p.dump(s)
+        except (pickle.PicklingError, TypeError):
+            pass
+        else:
+            assert 0, "No exception when trying to pickle a CurlShare handle"
+        del s, fp, p
+    
+    def test_pickle_dumps_curl(self):
+        try:
+            pickle.dumps(self.curl)
+        # python 2 raises pickle.PicklingError, python 3 raises TypeError
+        except (pickle.PicklingError, TypeError):
+            pass
+        else:
+            self.fail("No exception when trying to pickle a Curl handle")
+    
+    def test_pickle_dumps_multi(self):
+        m = pycurl.CurlMulti()
+        try:
+            pickle.dumps(m)
+        except (pickle.PicklingError, TypeError):
+            pass
+        else:
+            self.fail("No exception when trying to pickle a CurlMulti handle")
+    
+    def test_pickle_dumps_share(self):
+        s = pycurl.CurlShare()
+        try:
+            pickle.dumps(s)
+        except (pickle.PicklingError, TypeError):
+            pass
+        else:
+            self.fail("No exception when trying to pickle a CurlShare handle")
+    
     if cPickle is not None:
         def test_cpickle_curl(self):
             fp = util.StringIO()
@@ -163,3 +211,15 @@ class InternalsTest(unittest.TestCase):
             else:
                 assert 0, "No exception when trying to pickle a CurlMulti handle via cPickle"
             del m, fp, p
+        
+        def test_cpickle_share(self):
+            s = pycurl.CurlMulti()
+            fp = util.StringIO()
+            p = cPickle.Pickler(fp, 1)
+            try:
+                p.dump(s)
+            except cPickle.PicklingError:
+                pass
+            else:
+                assert 0, "No exception when trying to pickle a CurlShare handle via cPickle"
+            del s, fp, p

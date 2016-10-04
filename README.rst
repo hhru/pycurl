@@ -40,69 +40,27 @@ Overview
 Requirements
 ------------
 
-- Python 2.4 through 2.7 or 3.1 through 3.3.
+- Python 2.4 through 2.7 or 3.1 through 3.4.
 - libcurl 7.19.0 or better.
 
 Installation
 ------------
 
-You can install the most recent PycURL version using `easy_install`_::
+Please see INSTALL.rst for installation instructions. If installing from
+a Git checkout, please follow instruction in the "Git Checkout" section
+in INSTALL.rst.
 
-    easy_install pycurl
+Documentation
+-------------
 
-or `pip`_::
+Documentation for the most recent PycURL release is available on
+`PycURL website <http://pycurl.sourceforge.net/doc/>`_.
 
-    pip install pycurl
-
-Installing from source is performed via ``setup.py``::
-
-    python setup.py install
-
-You will need libcurl headers and libraries installed to install PycURL
-from source. PycURL uses ``curl-config`` to determine correct flags/libraries
-to use during compilation; you can override the location of ``curl-config``
-if it is not in PATH or you want to use a custom libcurl installation::
-
-    python setup.py --curl-config=/path/to/curl-config install
-
-Sometimes it is more convenient to use an environment variable, if
-you are not directly invoking ``setup.py``::
-
-    PYCURL_CURL_CONFIG=/path/to/curl-config python setup.py install
-
-``curl-config`` is expected to support the following options:
-
-- ``--version``
-- ``--cflags``
-- ``--libs``
-- ``--static-libs`` (if ``--libs`` does not work)
-
-PycURL requires that the SSL library that it is built against is the same
-one libcurl, and therefore PycURL, uses at runtime. PycURL's ``setup.py``
-uses ``curl-config`` to attempt to figure out which SSL library libcurl
-was compiled against, however this does not always work. If PycURL is unable
-to determine the SSL library in use it will print a warning similar to
-the following::
-
-    src/pycurl.c:137:4: warning: #warning "libcurl was compiled with SSL support, but configure could not determine which " "library was used; thus no SSL crypto locking callbacks will be set, which may " "cause random crashes on SSL requests" [-Wcpp]
-
-It will then fail at runtime as follows::
-
-    ImportError: pycurl: libcurl link-time ssl backend (openssl) is different from compile-time ssl backend (none/other)
-
-To fix this, you need to tell ``setup.py`` what SSL backend is used::
-
-    python setup.py --with-[ssl|gnutls|nss] install
-
-Or use an environment variable::
-
-    PYCURL_SSL_LIBRARY=openssl|gnutls|nss python setup.py installl
-
-Note the difference between ``--with-ssl`` (for compatibility with libcurl) and
-``PYCURL_SSL_LIBRARY=openssl``.
-
-.. _easy_install: http://peak.telecommunity.com/DevCenter/EasyInstall
-.. _pip: http://pypi.python.org/pypi/pip
+To build documentation from source, run ``make docs``.
+Building documentation requires `Sphinx <http://sphinx-doc.org/>`_ to
+be installed, as well as pycurl extension module built as docstrings are
+extracted from it. Built documentation is stored in ``build/doc``
+subdirectory.
 
 Support
 -------
@@ -110,12 +68,16 @@ Support
 For support questions, please use `curl-and-python mailing list`_.
 `Mailing list archives`_ are available for your perusal as well.
 
+Although not an official support venue, `Stack Overflow`_ has been quite
+popular with PycURL users as well.
+
 Bugs can be reported `via GitHub`_. Please only use GitHub issues when you are
 certain you have found a bug in PycURL. If you do not have a patch to fix
 the bug, or at least a specific code fragment in PycURL that you believe is
-the cause, you should instead post you inquiry to the mailing list.
+the cause, you should instead post your inquiry to the mailing list.
 
 .. _curl-and-python mailing list: http://cool.haxx.se/mailman/listinfo/curl-and-python
+.. _Stack Overflow: http://stackoverflow.com/questions/tagged/pycurl
 .. _Mailing list archives: http://curl.haxx.se/mail/list.cgi?list=curl-and-python
 .. _via GitHub: https://github.com/pycurl/pycurl/issues
 
@@ -126,7 +88,7 @@ PycURL comes with an automated test suite. To run the tests, execute::
 
     make test
 
-The suite depends on packages `nose`_, `bottle`_ and `cherrypy`_.
+The suite depends on packages `nose`_ and `bottle`_, as well as `vsftpd`_.
 
 Some tests use vsftpd configured to accept anonymous uploads. These tests
 are not run by default. As configured, vsftpd will allow reads and writes to
@@ -139,11 +101,11 @@ vsftpd tests you must explicitly set PYCURL_VSFTPD_PATH variable like so::
     # specify full path to vsftpd
     export PYCURL_VSFTPD_PATH=/usr/local/libexec/vsftpd
 
-These instructions work for Python 2.5 through 2.7 and 3.1 through 3.3.
+These instructions work for Python 2.5 through 2.7 and 3.1 through 3.4.
 
 .. _nose: https://nose.readthedocs.org/
 .. _bottle: http://bottlepy.org/
-.. _cherrypy: http://www.cherrypy.org/
+.. _vsftpd: http://vsftpd.beasts.org/
 
 Test Matrix
 -----------
@@ -157,12 +119,12 @@ configurations. It supports:
 - Testing against locally compiled libcurl with arbitrary options.
 
 To use the test matrix, first you need to start the test server from
-Python 2.5+ by running:::
+Python 2.5+ by running::
 
     python -m tests.appmanager
 
 Then in a different shell, and preferably in a separate user account,
-run the test matrix:::
+run the test matrix::
 
     # run ftp tests, etc.
     export PYCURL_VSFTPD_PATH=vsftpd
@@ -208,7 +170,7 @@ License
 
     Copyright (C) 2001-2008 by Kjetil Jacobsen <kjetilja at gmail.com>
     Copyright (C) 2001-2008 by Markus F.X.J. Oberhumer <markus at oberhumer.com>
-    Copyright (C) 2013-2014 by Oleg Pudeyev <oleg at bsdpower.com>
+    Copyright (C) 2013-2015 by Oleg Pudeyev <oleg at bsdpower.com>
 
     All rights reserved.
 

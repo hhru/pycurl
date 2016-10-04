@@ -1,7 +1,7 @@
 <?php // vi:ts=4:et
 echo "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n";
-$version = "7.19.3";
-$version_date = "Jan 09 2014"
+$version = "7.19.5.3";
+$version_date = "Nov 3 2015"
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
@@ -30,14 +30,14 @@ $version_date = "Jan 09 2014"
   <br />
   <b><font size="+3" face="Courier New, Courier, mono">PYCURL <?php echo $version; ?></font></b><br />
   <?php echo $version_date; ?> -
-  <a href='release-notes.html'>Release Notes</a>
+  <a href='doc/release-notes.html'>Release Notes</a>
   <br />
 </center>
 
 <h2>Quick Links</h2>
 
 <ul>
-  <li><a href="/doc/pycurl.html">PycURL documentation</a></li>
+  <li><a href="/doc/index.html">PycURL documentation</a></li>
   <li><a href="http://curl.haxx.se/libcurl/c/">libcurl documentation</a></li>
   <li><a href="http://cool.haxx.se/mailman/listinfo/curl-and-python">Mailing list</a></li>
   <li><a href="http://curl.haxx.se/mail/list.cgi?list=curl-and-python">Mailing list archives</a></li>
@@ -113,7 +113,7 @@ and
 <h2>Documentation</h2>
 
 <p>
-PycURL now includes API documentation in the <i><a href="doc/pycurl.html">doc</a></i> directory of the distribution,
+PycURL includes API documentation in the <i><a href="doc/index.html">doc</a></i> directory of the distribution,
 as well as a number of test and example scripts in the <i><a href="https://github.com/pycurl/pycurl/tree/master/tests">tests</a></i>
 and <i><a href="https://github.com/pycurl/pycurl/tree/master/examples">examples</a></i>
 directories of the distribution.
@@ -156,10 +156,12 @@ convenience only and are completely <b>unsupported</b> - use them
 at your own risk.
 </p>
 
-Also, official PycURL packages are available for <a href="http://ubuntulinux.org">Ubuntu</A>,
+<p>
+Also, official PycURL packages are available for <a href="http://ubuntulinux.org">Ubuntu</a>,
 <a href="http://debian.org">Debian GNU/Linux</a>, <a href="http://freebsd.org">FreeBSD</a>,
 <a href="http://gentoo.org">Gentoo Linux</a>, <a href="http://netbsd.org">NetBSD</a>,
 and <a href="http://openbsd.org">OpenBSD</a>.
+</p>
 
 
 <h2>Community</h2>
@@ -196,7 +198,7 @@ The libcurl library also has its own
 
 Copyright (C) 2001-2008 Kjetil Jacobsen<br />
 Copyright (C) 2001-2008 Markus F.X.J. Oberhumer<br />
-Copyright (C) 2013-2014 Oleg Pudeyev<br />
+Copyright (C) 2013-2015 Oleg Pudeyev<br />
 <br />
 PycURL is dual licensed under the LGPL and an MIT/X derivative license
 based on the cURL license. You can redistribute and/or modify PycURL

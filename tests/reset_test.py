@@ -4,10 +4,6 @@
 
 import pycurl
 import unittest
-try:
-    import urllib.parse as urllib_parse
-except ImportError:
-    import urllib as urllib_parse
 
 from . import appmanager
 from . import util
@@ -15,8 +11,28 @@ from . import util
 setup_module, teardown_module = appmanager.setup(('app', 8380))
 
 class ResetTest(unittest.TestCase):
+    def test_reset(self):
+        c = pycurl.Curl()
+        c.setopt(pycurl.USERAGENT, 'Phony/42')
+        c.setopt(pycurl.URL, 'http://localhost:8380/header?h=user-agent')
+        sio = util.BytesIO()
+        c.setopt(pycurl.WRITEFUNCTION, sio.write)
+        c.perform()
+        user_agent = sio.getvalue().decode()
+        assert user_agent == 'Phony/42'
+        
+        c.reset()
+        c.setopt(pycurl.URL, 'http://localhost:8380/header?h=user-agent')
+        sio = util.BytesIO()
+        c.setopt(pycurl.WRITEFUNCTION, sio.write)
+        c.perform()
+        user_agent = sio.getvalue().decode()
+        # we also check that the request succeeded after curl
+        # object has been reset
+        assert user_agent.startswith('PycURL')
+    
     # XXX this test was broken when it was test_reset.py
-    def skip_reset(self):
+    def skip_reset_with_multi(self):
         outf = util.BytesIO()
         cm = pycurl.CurlMulti()
 

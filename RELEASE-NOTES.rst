@@ -1,6 +1,65 @@
 Release Notes
 =============
 
+PycURL 7.19.5.3 - 2015-11-04
+----------------------------
+
+PycURL 7.19.5.2 release did not include some of the test suite files in
+its manifest, leading to inability to run the test suite from the sdist
+tarball. This is now fixed thanks to Kamil Dudka.
+
+
+PycURL 7.19.5.2 - 2015-11-02
+----------------------------
+
+Breaking change: DEBUGFUNCTION now takes bytes rather than (Unicode) string
+as its argument on Python 3.
+
+Breaking change: CURLMOPT_* option constants moved from Easy to Multi
+class. They remain available in pycurl module.
+
+SSL library detection improved again, --libcurl-dll option to setup.py added.
+
+Options that required tuples now also accept lists, and vice versa.
+
+This release fixes several memory leaks and one use after free issue.
+
+Support for several new libcurl options and constants has been added.
+
+
+PycURL 7.19.5.1 - 2015-01-06
+----------------------------
+
+This release primarily fixes build breakage against libcurl 7.19.4 through
+7.21.1, such as versions shipped with CentOS.
+
+
+PycURL 7.19.5 - 2014-07-12
+--------------------------
+
+PycURL C code has been significantly reorganized. Curl, CurlMulti and
+CurlShare classes are now properly exported, instead of factory functions for
+the respective objects. PycURL API has not changed.
+
+Documentation has been transitioned to Sphinx and reorganized as well.
+Both docstrings and standalone documentation are now more informative.
+
+Documentation is no longer included in released distributions. It can be
+generated from source by running `make docs`.
+
+Tests are no longer included in released distributions. Instead the
+documentation and quickstart examples should be consulted for sample code.
+
+Official Windows builds now are linked against zlib.
+
+
+PycURL 7.19.3.1 - 2014-02-05
+----------------------------
+
+This release restores PycURL's ability to automatically detect SSL library
+in use in most circumstances, thanks to Andjelko Horvat.
+
+
 PycURL 7.19.3 - 2014-01-09
 --------------------------
 
