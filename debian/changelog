@@ -1,3 +1,9 @@
+pycurl (7.19.5.3-1ubuntu1+hh1) unstable; urgency=low
+
+  * HH-63164 debianize 7.19.5 version
+
+ -- Automated Build <an.sumin@hh.ru>  Wed, 05 Oct 2016 11:26:15 +0300
+
 pycurl (7.19.5.3-1ubuntu1) unstable; urgency=medium
 
   * debianize 7.19.5.3 version
