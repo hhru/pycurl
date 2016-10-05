@@ -12,3 +12,7 @@
 /www/htdocs/download/*.exe
 /www/htdocs/download/*.gz
 /www/upload/*
+
+debian/python-pycurl*
+debian/files
+.pc/

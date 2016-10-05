@@ -1,0 +1,56 @@
+#! /usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+PY2VERS := $(shell pyversions -vs)
+CURLVERS := $(strip $(shell /usr/bin/curl-config --version | awk '{print $$2}'))
+
+unexport LDFLAGS
+export FFLAGS="-fPIC"
+
+%:
+	dh $@ --with python2
+
+override_dh_auto_build:
+	make gen
+	set -e ;\
+	for py in $(PY2VERS) ; do \
+		python$$py setup.py build ; \
+		python$$py-dbg setup.py build ; \
+	done
+
+override_dh_auto_test:
+ifeq ($(filter nocheck,$(DEB_BUILD_OPTIONS)),)
+	-set -e ;\
+	for py in $(PY2VERS) ; do \
+		PYTHON=$$py make test; \
+	done
+endif
+
+override_dh_auto_install:
+	for py in $(PY2VERS); do \
+		python$$py setup.py install --root=$(CURDIR)/debian/python-pycurl --install-layout=deb; \
+		python$$py-dbg setup.py install --root=$(CURDIR)/debian/python-pycurl-dbg --install-layout=deb; \
+	done
+
+	# Remove documentation as installed by setup.py
+	rm -rf $(CURDIR)/debian/python*-pycurl*/usr/share/doc/pycurl
+
+	rm -rf $(CURDIR)/debian/python*-pycurl-dbg/usr/lib/python*/*-packages/curl
+	rm -f $(CURDIR)/debian/python*-pycurl-dbg/usr/lib/python*/*-packages/pycurl-*.egg-info
+
+override_dh_strip:
+ifeq (,$(filter nostrip,$(DEB_BUILD_OPTIONS)))
+	dh_strip -ppython-pycurl --dbg-package=python-pycurl-dbg
+endif
+
+override_dh_compress:
+	dh_compress -X.py
+
+override_dh_shlibdeps:
+	dh_shlibdeps -a
+	sed -i '/shlibs:Depends/s,\(libcurl[0-9]*-gnutls (>= \)[^)]*\().*\),\1$(CURLVERS)\2,' debian/python-pycurl*.substvars
